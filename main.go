@@ -34,10 +34,21 @@ const (
 
 func run() error {
 
+	applicants, err := parseCSV()
+	if err != nil {
+		return err
+	}
+
+	lotteryAll(applicants)
+
+	return nil
+}
+
+func parseCSV() (map[plan][]applicant, error) {
 	cr := csv.NewReader(os.Stdin)
 	records, err := cr.ReadAll()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	records = records[1:] // skip header
@@ -58,27 +69,32 @@ func run() error {
 		}
 		a.next, err = strconv.ParseBool(record[2])
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		applicants[a.plan] = append(applicants[a.plan], a)
 	}
 
-	time.Sleep(2 * time.Second)
+	return applicants, nil
+}
 
+func lotteryAll(applicants map[plan][]applicant) {
 	// Platinum "Go"ld sponsor
 	fmt.Println(`==== Platinum "Go"ld sponsor ====`)
-	applicants[planGold] = append(applicants[planGold], lottery(applicants[planPlaTinum], 2, 1*time.Second)...)
+	goldNext := lottery(applicants[planPlaTinum], 2, 1*time.Second)
+	applicants[planGold] = append(applicants[planGold], goldNext...)
 	fmt.Println()
 
 	// "Go"ld sponsor
 	fmt.Println(`==== "Go"ld sponsor ====`)
-	applicants[planSilver] = append(applicants[planSilver], lottery(applicants[planGold], 2, 1*time.Second)...)
+	siliverNext := lottery(applicants[planGold], 2, 1*time.Second)
+	applicants[planSilver] = append(applicants[planSilver], siliverNext...)
 	fmt.Println()
 
 	// Silver sponsor
 	fmt.Println("==== Silver sponsor ====")
-	applicants[planBronze] = append(applicants[planBronze], lottery(applicants[planSilver], 10, 100 * time.Millisecond)...)
+	bronzeNext := lottery(applicants[planSilver], 10, 100*time.Millisecond)
+	applicants[planBronze] = append(applicants[planBronze], bronzeNext...)
 	fmt.Println()
 
 	// Bronze sponsor
@@ -95,8 +111,6 @@ func run() error {
 	for _, a := range applicants[planFree] {
 		fmt.Println(a.company)
 	}
-
-	return nil
 }
 
 func shuffle(as []applicant) {
