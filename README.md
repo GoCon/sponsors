@@ -14,7 +14,7 @@ $ go1.22.0 download
 抽選会では本番においても`practice.csv`を使ってデモンストレーションを行う。
 
 ```sh
-$ cat practive.csv | go1.22.0 run main.go | tee practice-result.txt
+$ cat practice.csv | go1.22.0 run main.go | tee practice-result.txt
 ```
 
 抽選会までに`applicants.csv`に参加企業とスポンサープランの一覧を出力しておく。

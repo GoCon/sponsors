@@ -19,7 +19,7 @@ var (
 func init() {
 	flag.IntVar(&flagPlaTinumCount, "p", 2, "counts of platinum plan")
 	flag.IntVar(&flagGoldCount, "g", 2, "counts of gold plan")
-	flag.IntVar(&flagSilverCount, "s", 10, "counts of silver plan")
+	flag.IntVar(&flagSilverCount, "s", 12, "counts of silver plan")
 }
 
 func main() {
@@ -37,6 +37,14 @@ type applicant struct {
 }
 
 type plan string
+
+var plans = []plan{
+	planPlaTinum,
+	planGold,
+	planSilver,
+	planBronze,
+	planFree,
+}
 
 const (
 	planPlaTinum plan = "platinum"
@@ -139,7 +147,12 @@ func parseCSV() (map[plan][]applicant, error) {
 	}
 
 	records = records[1:] // skip header
-	applicants := make(map[plan][]applicant, len(records))
+	applicants := make(map[plan][]applicant, len(plans))
+	for _, p := range plans {
+		if p.Limit() > 0 {
+			applicants[p] = make([]applicant, p.Limit())
+		}
+	}
 	companies := make(map[string]bool, len(records))
 	for _, record := range records {
 
@@ -166,15 +179,7 @@ func parseCSV() (map[plan][]applicant, error) {
 }
 
 func lotteryAll(applicants map[plan][]applicant) {
-	plans := []plan{
-		planPlaTinum,
-		planGold,
-		planSilver,
-		planBronze,
-		planFree,
-	}
-
-	var doLotteries []func()
+	doLotteries := make([]func(), 0, len(plans))
 	for _, plan := range plans {
 		doLotteries = append(doLotteries, func() {
 			fmt.Printf("==== %s sponsor ====\n", plan.Title())
