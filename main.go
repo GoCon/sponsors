@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"math/rand/v2"
 	"os"
@@ -9,7 +10,20 @@ import (
 	"time"
 )
 
+var (
+	flagPlaTinumCount int
+	flagGoldCount     int
+	flagSilverCount   int
+)
+
+func init() {
+	flag.IntVar(&flagPlaTinumCount, "p", 2, "counts of platinum plan")
+	flag.IntVar(&flagGoldCount, "g", 2, "counts of gold plan")
+	flag.IntVar(&flagSilverCount, "s", 10, "counts of silver plan")
+}
+
 func main() {
+	flag.Parse()
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -31,6 +45,79 @@ const (
 	planBronze   plan = "bronze"
 	planFree     plan = "free"
 )
+
+func (p plan) IsLottery() bool {
+	switch p {
+	case planPlaTinum:
+		return true
+	case planGold:
+		return true
+	case planSilver:
+		return true
+	case planBronze:
+		return false
+	case planFree:
+		return false
+	}
+
+	return false
+}
+
+func (p plan) Title() string {
+	switch p {
+	case planPlaTinum:
+		return `Platinum "Go"ld`
+	case planGold:
+		return `"Go"ld`
+	case planSilver:
+		return "Silver"
+	case planBronze:
+		return "Bronze"
+	case planFree:
+		return "Free"
+	}
+
+	return "unknown plan"
+}
+
+func (p plan) Limit() int {
+	switch p {
+	case planPlaTinum:
+		return flagPlaTinumCount
+	case planGold:
+		return flagGoldCount
+	case planSilver:
+		return flagSilverCount
+	}
+	return -1
+}
+
+func (p plan) Delay() time.Duration {
+	switch p {
+	case planPlaTinum:
+		return 1 * time.Second
+	case planGold:
+		return 1 * time.Second
+	case planSilver:
+		return 300 * time.Millisecond
+	}
+	return 0
+}
+
+func (p plan) Next() plan {
+	switch p {
+	case planPlaTinum:
+		return planGold
+	case planGold:
+		return planSilver
+	case planSilver:
+		return planBronze
+	case planBronze:
+		return planBronze
+	default:
+		return planFree
+	}
+}
 
 func run() error {
 
@@ -79,37 +166,27 @@ func parseCSV() (map[plan][]applicant, error) {
 }
 
 func lotteryAll(applicants map[plan][]applicant) {
-	// Platinum "Go"ld sponsor
-	fmt.Println(`==== Platinum "Go"ld sponsor ====`)
-	goldNext := lottery(applicants[planPlaTinum], 2, 1*time.Second)
-	applicants[planGold] = append(applicants[planGold], goldNext...)
-	fmt.Println()
-
-	// "Go"ld sponsor
-	fmt.Println(`==== "Go"ld sponsor ====`)
-	siliverNext := lottery(applicants[planGold], 2, 1*time.Second)
-	applicants[planSilver] = append(applicants[planSilver], siliverNext...)
-	fmt.Println()
-
-	// Silver sponsor
-	fmt.Println("==== Silver sponsor ====")
-	bronzeNext := lottery(applicants[planSilver], 10, 100*time.Millisecond)
-	applicants[planBronze] = append(applicants[planBronze], bronzeNext...)
-	fmt.Println()
-
-	// Bronze sponsor
-	fmt.Println("==== Bronze sponsor ====")
-	shuffle(applicants[planBronze])
-	for _, a := range applicants[planBronze] {
-		fmt.Println(a.company)
+	plans := []plan{
+		planPlaTinum,
+		planGold,
+		planSilver,
+		planBronze,
+		planFree,
 	}
-	fmt.Println()
 
-	// Free sponsor
-	fmt.Println("==== Free sponsor ====")
-	shuffle(applicants[planFree])
-	for _, a := range applicants[planFree] {
-		fmt.Println(a.company)
+	var doLotteries []func()
+	for _, plan := range plans {
+		doLotteries = append(doLotteries, func() {
+			fmt.Printf("==== %s sponsor ====\n", plan.Title())
+			nexts := lottery(applicants[plan], plan.Limit(), plan.Delay())
+			applicants[plan.Next()] = append(applicants[plan.Next()], nexts...)
+			fmt.Println()
+		})
+	}
+
+	for _, f := range doLotteries {
+		f()
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -122,12 +199,20 @@ func shuffle(as []applicant) {
 func lottery(as []applicant, n int, d time.Duration) []applicant {
 	shuffle(as)
 	n = min(len(as), n)
+	if n < 0 {
+		n = len(as)
+	}
+
 	for i := range n {
 		printCompany(as[i].company, d)
 	}
 
+	if len(as)-n <= 0 {
+		return nil
+	}
+
 	var nexts []applicant
-	for _, a := range as[2:] {
+	for _, a := range as[n:] {
 		if a.next {
 			nexts = append(nexts, a)
 		}
