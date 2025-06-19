@@ -150,7 +150,7 @@ func parseCSV() (map[plan][]applicant, error) {
 	applicants := make(map[plan][]applicant, len(plans))
 	for _, p := range plans {
 		if p.Limit() > 0 {
-			applicants[p] = make([]applicant, p.Limit())
+			applicants[p] = make([]applicant, 0, p.Limit())
 		}
 	}
 	companies := make(map[string]bool, len(records))
