@@ -17,7 +17,7 @@ var (
 func init() {
 	flag.IntVar(&flagPlaTinumCount, "p", 2, "counts of platinum plan")
 	flag.IntVar(&flagGoldCount, "g", 2, "counts of gold plan")
-	flag.IntVar(&flagSilverCount, "s", 12, "counts of silver plan")
+	flag.IntVar(&flagSilverCount, "s", 18, "counts of silver plan")
 }
 
 func main() {
