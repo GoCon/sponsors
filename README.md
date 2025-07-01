@@ -2,19 +2,19 @@
 
 ## 使い方
 
-### Go1.22のインストール
+### Go1.25RC1のインストール
 
 ```sh
-$ go install golang.org/dl/go1.22.0@latest
-$ go1.22.0 download
+$ go install golang.org/dl/go1.25rc1.0@latest
+$ go1.25rc1 download
 ```
 
 ### 抽選
 
-抽選会では本番においても`practice.csv`を使ってデモンストレーションを行う。
+抽選会では本番においても`testdata/practice.csv`を使ってデモンストレーションを行う。
 
 ```sh
-$ cat practice.csv | go1.22.0 run main.go | tee practice-result.txt
+$ cat testdata/practice.csv | go1.25rc1 run ./cmd/lottery | tee practice-result.txt
 ```
 
 抽選会までに`applicants.csv`に参加企業とスポンサープランの一覧を出力しておく。
@@ -28,5 +28,5 @@ company,plan,next
 ```
 
 ```sh
-$ cat applicants.csv | go1.22.0 run main.go | tee result.txt
+$ cat applicants.csv | go1.25rc1 run ./cmd/lottery | tee result.txt
 ```
