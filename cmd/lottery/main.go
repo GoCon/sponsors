@@ -9,15 +9,17 @@ import (
 )
 
 var (
-	flagPlaTinumCount int
-	flagGoldCount     int
-	flagSilverCount   int
+	flagGoldCount   int
+	flagSilverCount int
+	flagLunchCount  int
+	flagDrinkCount  int
 )
 
 func init() {
-	flag.IntVar(&flagPlaTinumCount, "p", 2, "counts of platinum plan")
-	flag.IntVar(&flagGoldCount, "g", 2, "counts of gold plan")
-	flag.IntVar(&flagSilverCount, "s", 18, "counts of silver plan")
+	flag.IntVar(&flagGoldCount, "g", 6, "counts of gold plan")
+	flag.IntVar(&flagSilverCount, "s", 12, "counts of silver plan")
+	flag.IntVar(&flagLunchCount, "l", 2, "counts of lunch plan")
+	flag.IntVar(&flagDrinkCount, "d", 2, "counts of drink plan")
 }
 
 func main() {
@@ -35,9 +37,10 @@ func run() error {
 	}
 
 	l := &sponsors.Lottery{
-		PlaTinumCount: flagPlaTinumCount,
-		GoldCount:     flagGoldCount,
-		SilverCount:   flagSilverCount,
+		GoldCount:   flagGoldCount,
+		SilverCount: flagSilverCount,
+		LunchCount:  flagLunchCount,
+		DrinkCount:  flagDrinkCount,
 	}
 
 	result := l.Do(applicants)

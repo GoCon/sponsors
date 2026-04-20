@@ -27,10 +27,6 @@ func TestLotteryResult_Show(t *testing.T) {
 		result sponsors.LotteryResult
 	}{
 		"normal": {result: sponsors.LotteryResult{
-			sponsors.PlanPlaTinum: []*sponsors.Applicant{
-				{Name: "PlaTinum 01", Plan: sponsors.PlanPlaTinum, Next: true},
-				{Name: "PlaTinum 02", Plan: sponsors.PlanPlaTinum, Next: true},
-			},
 			sponsors.PlanGold: []*sponsors.Applicant{
 				{Name: "GoldTinum 01", Plan: sponsors.PlanGold, Next: true},
 				{Name: "GoldTinum 02", Plan: sponsors.PlanGold, Next: true},
@@ -40,6 +36,14 @@ func TestLotteryResult_Show(t *testing.T) {
 				{Name: "SilverTinum 01", Plan: sponsors.PlanSilver, Next: true},
 				{Name: "SilverTinum 02", Plan: sponsors.PlanSilver, Next: true},
 				{Name: "SilverTinum 03", Plan: sponsors.PlanSilver, Next: true},
+			},
+			sponsors.PlanLunch: []*sponsors.Applicant{
+				{Name: "LunchTinum 01", Plan: sponsors.PlanLunch, Next: true},
+				{Name: "LunchTinum 02", Plan: sponsors.PlanLunch, Next: true},
+			},
+			sponsors.PlanDrink: []*sponsors.Applicant{
+				{Name: "DrinkTinum 01", Plan: sponsors.PlanDrink, Next: true},
+				{Name: "DrinkTinum 02", Plan: sponsors.PlanDrink, Next: true},
 			},
 		}},
 	}

@@ -9,19 +9,22 @@ import (
 )
 
 type Lottery struct {
-	PlaTinumCount int
-	GoldCount     int
-	SilverCount   int
+	GoldCount   int
+	SilverCount int
+	LunchCount  int
+	DrinkCount  int
 }
 
 func (l *Lottery) Limit(p Plan) int {
 	switch p {
-	case PlanPlaTinum:
-		return l.PlaTinumCount
 	case PlanGold:
 		return l.GoldCount
 	case PlanSilver:
 		return l.SilverCount
+	case PlanLunch:
+		return l.LunchCount
+	case PlanDrink:
+		return l.DrinkCount
 	}
 	return -1
 }
@@ -31,8 +34,7 @@ func (l *Lottery) Do(applicants map[Plan][]*Applicant) LotteryResult {
 	doLotteries := make([]func() (Plan, []*Applicant), 0, len(plans))
 	for _, plan := range plans {
 		doLotteries = append(doLotteries, func() (Plan, []*Applicant) {
-			sponsors, nexts := l.doPlan(applicants[plan], l.Limit(plan))
-			applicants[plan.Next()] = append(applicants[plan.Next()], nexts...)
+			sponsors := l.doPlan(applicants[plan], l.Limit(plan))
 			return plan, sponsors
 		})
 	}
@@ -46,7 +48,7 @@ func (l *Lottery) Do(applicants map[Plan][]*Applicant) LotteryResult {
 	return result
 }
 
-func (l *Lottery) doPlan(as []*Applicant, n int) (sponsors, nexts []*Applicant) {
+func (l *Lottery) doPlan(as []*Applicant, n int) (sponsors []*Applicant) {
 	rand.Shuffle(len(as), func(i, j int) {
 		as[i], as[j] = as[j], as[i]
 	})
@@ -59,16 +61,10 @@ func (l *Lottery) doPlan(as []*Applicant, n int) (sponsors, nexts []*Applicant) 
 	sponsors = slices.Clone(as[:n])
 
 	if len(as)-n <= 0 {
-		return sponsors, nil
+		return sponsors
 	}
 
-	for _, a := range as[n:] {
-		if a.Next {
-			nexts = append(nexts, a)
-		}
-	}
-
-	return sponsors, nexts
+	return sponsors
 }
 
 type LotteryResult map[Plan][]*Applicant
@@ -89,7 +85,7 @@ func (r LotteryResult) Show(w io.Writer) {
 
 func (r LotteryResult) PlanDelay(p Plan) time.Duration {
 	switch p {
-	case PlanPlaTinum:
+	case PlanLunch:
 		return 1 * time.Second
 	case PlanGold:
 		return 1 * time.Second
