@@ -1,6 +1,7 @@
 package sponsors
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"math/rand/v2"
@@ -74,7 +75,11 @@ func (r LotteryResult) Show(w io.Writer) {
 		if !plan.IsLottery() {
 			continue
 		}
-		fmt.Fprintf(w, "==== %s sponsor ====\n", plan.Title())
+		title, err := plan.Title()
+		if err, ok := errors.AsType[ErrUnknownPlan](err); ok {
+			title = err.Error()
+		}
+		fmt.Fprintf(w, "==== %s sponsor ====\n", title)
 		for _, applicant := range r[plan] {
 			r.printApplicant(w, applicant.Name, r.PlanDelay(plan))
 		}

@@ -1,5 +1,7 @@
 package sponsors
 
+import "fmt"
+
 type Plan string
 
 func Plans() []Plan {
@@ -27,30 +29,36 @@ func (p Plan) IsLottery() bool {
 	}
 }
 
-func (p Plan) Title() string {
+type ErrUnknownPlan struct{}
+
+func (e ErrUnknownPlan) Error() string {
+	return "unknown plan"
+}
+
+func (p Plan) Title() (string, error) {
 	switch p {
 	case PlanGold:
-		return `"Go"ld`
+		return `"Go"ld`, nil
 	case PlanSilver:
-		return "Silver"
+		return "Silver", nil
 	case PlanLunch:
-		return "Lunch"
+		return "Lunch", nil
 	case PlanDrink:
-		return "Drink"
+		return "Drink", nil
 	default:
-		return "unknown plan"
+		return "unknown plan", fmt.Errorf("unknown plan: %s", p)
 	}
 }
 
-func (p Plan) Next() Plan {
+func (p Plan) Next() (Plan, error) {
 	switch p {
 	case PlanGold:
-		return PlanSilver
+		return PlanSilver, nil
 	case PlanSilver:
-		return PlanLunch
+		return PlanLunch, nil
 	case PlanLunch:
-		return PlanDrink
+		return PlanDrink, nil
 	default:
-		return ""
+		return "", fmt.Errorf("unknown plan: %s", p)
 	}
 }
