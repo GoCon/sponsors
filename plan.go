@@ -49,16 +49,3 @@ func (p Plan) Title() (string, error) {
 		return "unknown plan", fmt.Errorf("unknown plan: %s", p)
 	}
 }
-
-func (p Plan) Next() (Plan, error) {
-	switch p {
-	case PlanGold:
-		return PlanSilver, nil
-	case PlanSilver:
-		return PlanLunch, nil
-	case PlanLunch:
-		return PlanDrink, nil
-	default:
-		return "", fmt.Errorf("unknown plan: %s", p)
-	}
-}

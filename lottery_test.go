@@ -28,22 +28,22 @@ func TestLotteryResult_Show(t *testing.T) {
 	}{
 		"normal": {result: sponsors.LotteryResult{
 			sponsors.PlanGold: []*sponsors.Applicant{
-				{Name: "GoldTinum 01", Plan: sponsors.PlanGold, Next: true},
-				{Name: "GoldTinum 02", Plan: sponsors.PlanGold, Next: true},
-				{Name: "GoldTinum 03", Plan: sponsors.PlanGold, Next: true},
+				{Name: "GoldTinum 01", Plan: sponsors.PlanGold},
+				{Name: "GoldTinum 02", Plan: sponsors.PlanGold},
+				{Name: "GoldTinum 03", Plan: sponsors.PlanGold},
 			},
 			sponsors.PlanSilver: []*sponsors.Applicant{
-				{Name: "SilverTinum 01", Plan: sponsors.PlanSilver, Next: true},
-				{Name: "SilverTinum 02", Plan: sponsors.PlanSilver, Next: true},
-				{Name: "SilverTinum 03", Plan: sponsors.PlanSilver, Next: true},
+				{Name: "SilverTinum 01", Plan: sponsors.PlanSilver},
+				{Name: "SilverTinum 02", Plan: sponsors.PlanSilver},
+				{Name: "SilverTinum 03", Plan: sponsors.PlanSilver},
 			},
 			sponsors.PlanLunch: []*sponsors.Applicant{
-				{Name: "LunchTinum 01", Plan: sponsors.PlanLunch, Next: true},
-				{Name: "LunchTinum 02", Plan: sponsors.PlanLunch, Next: true},
+				{Name: "LunchTinum 01", Plan: sponsors.PlanLunch},
+				{Name: "LunchTinum 02", Plan: sponsors.PlanLunch},
 			},
 			sponsors.PlanDrink: []*sponsors.Applicant{
-				{Name: "DrinkTinum 01", Plan: sponsors.PlanDrink, Next: true},
-				{Name: "DrinkTinum 02", Plan: sponsors.PlanDrink, Next: true},
+				{Name: "DrinkTinum 01", Plan: sponsors.PlanDrink},
+				{Name: "DrinkTinum 02", Plan: sponsors.PlanDrink},
 			},
 		}},
 	}

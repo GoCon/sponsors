@@ -18,13 +18,13 @@ $ cat testdata/practice.csv | go1.26.3 run ./cmd/lottery | tee practice-result.t
 ```
 
 抽選会までに`applicants.csv`に参加企業とスポンサープランの一覧を出力しておく。
-CSVの内容は以下のように、社名、プラン、外れた場合に次のプランの抽選に参加するかが含まれています。
+CSVの内容は以下のように、社名、プランが含まれています。
 
 ```
-company,plan,next
-株式会社Gopher1,free,FALSE
-株式会社Gopher2,platinum,TRUE
-株式会社Gopher3,gold,TRUE
+company,plan
+株式会社Gopher1,free
+株式会社Gopher2,platinum
+株式会社Gopher3,gold
 ```
 
 ```sh
