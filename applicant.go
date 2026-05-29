@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 )
 
 type Applicant struct {
 	Name string
 	Plan Plan
-	Next bool
 }
 
 func ParseCSV(r io.Reader) (map[Plan][]*Applicant, error) {
@@ -38,11 +36,6 @@ func ParseCSV(r io.Reader) (map[Plan][]*Applicant, error) {
 			Name: record[0],
 			Plan: Plan(record[1]),
 		}
-		next, err := strconv.ParseBool(record[2])
-		if err != nil {
-			return nil, err
-		}
-		a.Next = next
 
 		applicants[a.Plan] = append(applicants[a.Plan], a)
 	}

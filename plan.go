@@ -1,62 +1,51 @@
 package sponsors
 
+import "fmt"
+
 type Plan string
 
 func Plans() []Plan {
 	return []Plan{
-		PlanPlaTinum,
 		PlanGold,
 		PlanSilver,
-		PlanBronze,
-		PlanFree,
+		PlanLunch,
+		PlanDrink,
 	}
 }
 
 const (
-	PlanPlaTinum Plan = "platinum"
-	PlanGold     Plan = "gold"
-	PlanSilver   Plan = "silver"
-	PlanBronze   Plan = "bronze"
-	PlanFree     Plan = "free"
+	PlanGold   Plan = "gold"
+	PlanSilver Plan = "silver"
+	PlanLunch  Plan = "lunch"
+	PlanDrink  Plan = "drink"
 )
 
 func (p Plan) IsLottery() bool {
 	switch p {
-	case PlanPlaTinum, PlanGold, PlanSilver:
+	case PlanGold, PlanSilver, PlanLunch, PlanDrink:
 		return true
 	default:
 		return false
 	}
 }
 
-func (p Plan) Title() string {
-	switch p {
-	case PlanPlaTinum:
-		return `Platinum "Go"ld`
-	case PlanGold:
-		return `"Go"ld`
-	case PlanSilver:
-		return "Silver"
-	case PlanBronze:
-		return "Bronze"
-	case PlanFree:
-		return "Free"
-	}
+type ErrUnknownPlan struct{}
 
+func (e ErrUnknownPlan) Error() string {
 	return "unknown plan"
 }
 
-func (p Plan) Next() Plan {
+func (p Plan) Title() (string, error) {
 	switch p {
-	case PlanPlaTinum:
-		return PlanGold
 	case PlanGold:
-		return PlanSilver
+		return `"Go"ld`, nil
 	case PlanSilver:
-		return PlanBronze
-	case PlanBronze:
-		return PlanBronze
+		return "Silver", nil
+	case PlanLunch:
+		return "Lunch", nil
+	case PlanDrink:
+		return "Drink", nil
 	default:
-		return PlanFree
+		return "unknown plan", fmt.Errorf("unknown plan: %s", p)
 	}
 }
