@@ -90,11 +90,9 @@ func (r LotteryResult) Show(w io.Writer) {
 
 func (r LotteryResult) PlanDelay(p Plan) time.Duration {
 	switch p {
-	case PlanLunch:
-		return 1 * time.Second
 	case PlanGold:
 		return 1 * time.Second
-	case PlanSilver:
+	case PlanSilver, PlanLunch, PlanDrink:
 		return 300 * time.Millisecond
 	}
 	return 0
